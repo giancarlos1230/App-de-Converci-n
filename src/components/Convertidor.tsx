@@ -1,143 +1,125 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native'
 
-export const Convertidor = () => {
-    const [origen, setOrigen] = useState('cm')
-    const [destino, setDestino] = useState('mt')
-    const [convertir, setConvertir] = useState(0)
-    const [resultado, setResultado] = useState(0)
+ const Convertidor = () => {
+    const [origen, setOrigen] = useState('NIO')
+    const [destino, setDestino] = useState('USD')
+    const [cantidadConvertir, setCantidadConvertir] = useState<number>(0)
+    const [resultado, setResultado] = useState<number>(0)
 
-    // const handleChangeOrigen = (texto: string) => {
-    //alert(texto)
-    //     setOrigen(texto)
-    //  }
+    const [error, setError] = useState<boolean>(false)
 
-    const handleChangeConvertir = (texto: string) => {
-        const numero = parseFloat(texto)
-        //alert(texto)
-        setConvertir(numero)
+    const tcDolar: number= 35.3
+    const tcEuro: number= 40.22
+    const tcEuroDolar: number= 1.24
+
+
+    const handleCantidad = (texto: string) => {
+        const cant = parseFloat(text)
+        if (isNan(cant)) {
+            setError(true)
+        } else {
+            setError(false)
+        }
+        setCantidadConvertir(cant)
     }
 
-    const handleCalcular = () => {
-        if (origen === 'cm' && destino === 'mt') {
-            const result = convertir / 100
-            setResultado(result)
+    const handleConvertir = () => {
+        if (!cantidadConvertir){
+            alert('Se require la cantidad que desea convertir')
+            return
         }
 
-        if (origen === 'km' && destino === 'mt') {
-            const result = convertir / 100
-            setResultado(result)
+        if (origen === 'NIO' && destino === 'USD') {
+            setResultado (cantidadConvertir / tcDolar)
         }
-        if (origen === "ml" && destino === "cm") {
-            const result = convertir / 10;
-            setResultado(result)
-        }
-        if (origen === "ml" && destino === "mt") {
-            const result = convertir / 1000;
-            setResultado(result)
-        }
-        if (origen === "ml" && destino === "km") {
-            const result = convertir / 1000000;
-            setResultado(result)
-        }
-        if (origen === "cm" && destino === "ml") {
-            const result = convertir * 10;
-            setResultado(result)
-        }
-        if (origen === "cm" && destino === "mt") {
-            const result = convertir * 100;
-            setResultado(result)
-        }
-        if (origen === "cm" && destino === "km") {
-            const result = convertir * 100000;
-            setResultado(result)
-        }
-        if (origen === "mt" && destino === "ml") {
-            const result = convertir * 1000;
-            setResultado(result)
-        }
-        if (origen === "mt" && destino === "cm") {
-            const result = convertir * 100;
-            setResultado(result)
-        }
-        if (origen === "mt" && destino === "km") {
-            const result = convertir / 1000;
-            setResultado(result)
-        }
-        if (origen === "km" && destino === "ml") {
-            const result = convertir * 1000000;
-            setResultado(result)
-        }
-        if (origen === "km" && destino === "cm") {
-            const result = convertir * 100000;
-            setResultado(result)
-        }
-        if (origen === "km" && destino === "mt") {
-            const result = convertir * 1000;
-            setResultado(result)
+        if (origen === 'USD' && destino === 'NIO') {
+            setResultado (cantidadConvertir * tcDolar)
         }
 
+
+        if (origen === 'NIO' && destino === 'EUR') {
+            setResultado (cantidadConvertir / tcEuro)
+        }
+        if (origen === 'EUR' && destino === 'NIO') {
+            setResultado (cantidadConvertir * tcEuro)
+        }
+
+
+        if (origen === 'USD' && destino === 'EUR') {
+            setResultado (cantidadConvertir / tcEuroDolar)
+        }
+        if (origen === 'EUR' && destino === 'USD') {
+            setResultado (cantidadConvertir * tcEuroDolar)
+        }
+        
     }
+    
+    return (
+
+        <View style={Styles.container}>
+
+        <FormInput title="Cantidad"
+            defaultValue={cantidadConvertir.toString()}
+            onChangeText={handleCantidad}
+            handleError={error}
+            errorMenssage="Solo se admiten numeros"
+            />
 
 
-    //proxima clasae hacer >>>>>> milimitros, centimetros metros y kilometros todos a en sus conjugaciones
-}
-return (
-
-    <View>
-        <Text>Origen</Text>
-
-        <TextInput
+        <FormInput title="Moneda de Origen"
             defaultValue={origen}
-            style={styles.input}
-            maxLength={2}
             onChangeText={setOrigen}
-        />
-        <Text>Destino</Text>
-        <TextInput
+            />
+
+        <FormInput title="Moneda de Destino"
             defaultValue={destino}
-            style={styles.input}
             onChangeText={setDestino}
-        />
+            />
 
-        <Text>Convertir</Text>
-        <TextInput
-            defaultValue={convertir.toString()}
-            style={styles.input}
-            onChangeText={
-                (text) => handleChangeConvertir(text)
-            }
-        />
+        <Fab title="CV" position="tr" onPress={handleConvertir} />
 
-        <Text>Resultado</Text>
-        <TextInput
-            defaultValue={resultado.toString()}
-            style={styles.input}
-        />
+        <View style={styles.button}>
+            <Button
+                disabled={error}
+                onPress={handleConvertir}
+                title="Convertir"
 
-        <View style={styles.button} />
-        <Button
-            title="Calcular"
-            onPress={handleCalcular} />
+            />
     </View>
-)
+
+        <Text
+        style={[styles.label, styles.resultado]}>
+            {resultado.toFixed(2)}
+            </Text>
+            </View>
+    )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+        label: {
+            color: 'red'
+    },
+        input:
+        {
+            borderColor: 'red',
+            borderWidth: 2,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+        },
+        resultado: {
+            alignSelf: 'center',
+            fontSize: 40
+        },
 
     button: {
         marginTop: 10,
-    },
-
-    //no neccerariamente se tiene que llamar input puede tener otro nombre.
-    input:
-    {
-        borderWidth: 3,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderColor: 'black'
     }
 
-
 })
+    
+export default Convertidor
