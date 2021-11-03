@@ -1,10 +1,10 @@
 import React from 'react';
-import { Convertidor } from './src/components/Convertidor';
+import ConvertidorDivisa from './src/components/ConvertidorDivisa';
 
 export default function App() {
   return (
 
-    <Convertidor />
+    <ConvertidorDivisa />
 
   );
 }
